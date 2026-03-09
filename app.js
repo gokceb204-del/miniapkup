@@ -9,29 +9,28 @@ const products = [
     code: "yemek",
     title: "Yemek 350/250",
     price: "30₺",
-    discount: "350/250 indirim",
-    stock: true
+    discount: "350/250 indirim"
   },
   {
     code: "yemek2",
     title: "Yemek 300/180",
     price: "25₺",
-    discount: "300/180 indirim",
-    stock: true
+    discount: "300/180 indirim"
   },
   {
     code: "market",
     title: "Market 300/200",
     price: "17₺",
-    discount: "300/200 indirim",
-    stock: true
+    discount: "300/200 indirim"
   }
 ];
 
 function loadProducts() {
+
   productsBox.innerHTML = "";
 
   products.forEach(product => {
+
     const card = document.createElement("div");
     card.className = "card";
 
@@ -43,12 +42,31 @@ function loadProducts() {
     `;
 
     const btn = card.querySelector(".buy-btn");
+
     btn.addEventListener("click", () => {
-      alert(`${product.title} seçildi`);
+
+      const commandMap = {
+        "yemek": "/yemek",
+        "yemek2": "/yemek2",
+        "market": "/market"
+      };
+
+      const cmd = commandMap[product.code];
+
+      if (cmd) {
+
+        tg.sendData(cmd);
+
+        tg.showAlert(product.title + " işlemi başlatıldı.\nBot mesajlarını kontrol et.");
+
+      }
+
     });
 
     productsBox.appendChild(card);
+
   });
+
 }
 
 loadProducts();
