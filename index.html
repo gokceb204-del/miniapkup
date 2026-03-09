@@ -2,20 +2,32 @@
 <html lang="tr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mağaza</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>KuponMarket</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <div class="top-box">
-      <h1>Mağazamıza Hoş Geldiniz</h1>
-      <p>İndirimli hesaplar</p>
-    </div>
+  <main class="app-shell">
+    <section class="welcome-card">
+      <div class="welcome-copy">
+        <h1>
+          <span class="grad-a">Mağazamıza</span>
+          <span class="grad-b">Hoş</span>
+          <span class="grad-c">Geldiniz</span>
+        </h1>
+        <p>Keyifli alışverişler dileriz</p>
+      </div>
+      <div id="balancePill" class="balance-pill">
+        <span>Bakiye</span>
+        <strong>0.00₺</strong>
+      </div>
+    </section>
 
-    <div id="products" class="products"></div>
-  </div>
+    <section id="products" class="product-list"></section>
+  </main>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
 
   <script src="app.js"></script>
 </body>
