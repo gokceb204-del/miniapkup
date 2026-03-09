@@ -15,14 +15,7 @@ function sendProductCommand(product) {
   try {
     const payload = `/${product.code}`;
     console.log("Gönderilen payload:", payload);
-
     tg.sendData(payload);
-
-    tg.showPopup({
-      title: "İşlem başlatıldı",
-      message: `${product.title} için istek bota gönderildi.`,
-      buttons: [{ type: "ok" }]
-    });
   } catch (err) {
     console.error("Mini App veri gönderme hatası:", err);
 
