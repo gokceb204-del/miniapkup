@@ -1,34 +1,176 @@
-<!doctype html>
-<html lang="tr">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>KuponMarket</title>
-  <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>MiniApp Store</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#0f172a;
+    color:white;
+    margin:0;
+    padding:20px;
+}
+
+.title{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.products{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:14px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.4);
+}
+
+.card h3{
+    margin:0;
+    font-size:18px;
+}
+
+.price{
+    margin-top:10px;
+    font-size:22px;
+    font-weight:bold;
+    color:#22c55e;
+}
+
+.buy{
+    margin-top:15px;
+    width:100%;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#3b82f6;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.buy:hover{
+    background:#2563eb;
+}
+
+.balance{
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+</style>
 </head>
+
+
 <body>
-  <main class="app-shell">
-    <section class="welcome-card">
-      <div class="welcome-copy">
-        <h1>
-          <span class="grad-a">Mağazamıza</span>
-          <span class="grad-b">Hoş</span>
-          <span class="grad-c">Geldiniz</span>
-        </h1>
-        <p>Keyifli alışverişler dileriz</p>
-      </div>
-      <div id="balancePill" class="balance-pill">
-        <span>Bakiye</span>
-        <strong>0.00₺</strong>
-      </div>
-    </section>
 
-    <section id="products" class="product-list"></section>
-  </main>
+<div class="title">🛒 Mağaza</div>
 
-  <div id="toast" class="toast" aria-live="polite"></div>
+<div class="balance">
+Bakiye: <span id="balance">0</span>
+</div>
 
-  <script src="app.js"></script>
+<div class="products" id="products"></div>
+
+
+<script>
+
+const tg = window.Telegram.WebApp
+tg.expand()
+
+let user_id = 1
+
+if(tg.initDataUnsafe?.user?.id){
+    user_id = tg.initDataUnsafe.user.id
+}
+
+
+// BAKİYE ÇEK
+fetch("http://127.0.0.1:3000/balance/" + user_id)
+.then(r=>r.json())
+.then(data=>{
+    document.getElementById("balance").innerText = data.balance
+})
+
+
+
+// ÜRÜNLERİ ÇEK
+fetch("http://127.0.0.1:3000/products")
+.then(r=>r.json())
+.then(products=>{
+
+    let html=""
+
+    products.forEach(p=>{
+
+        html += `
+        <div class="card">
+
+            <h3>${p.name}</h3>
+
+            <div class="price">
+                ${p.price} kredi
+            </div>
+
+            <button class="buy" onclick="buy('${p.code}')">
+                Satın Al
+            </button>
+
+        </div>
+        `
+
+    })
+
+    document.getElementById("products").innerHTML = html
+
+})
+
+
+
+function buy(code){
+
+fetch("http://127.0.0.1:3000/buy",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+user_id:user_id,
+product:code
+})
+})
+.then(r=>r.json())
+.then(res=>{
+
+if(res.error){
+
+alert("Yetersiz bakiye")
+
+}else{
+
+alert("Satın alma başarılı")
+
+location.reload()
+
+}
+
+})
+
+}
+
+</script>
+
 </body>
 </html>
