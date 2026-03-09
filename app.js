@@ -1,72 +1,35 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-const user = tg.initDataUnsafe?.user;
 const productsBox = document.getElementById("products");
 
 const products = [
-  {
-    code: "yemek",
-    title: "Yemek 350/250",
-    price: "30₺",
-    discount: "350/250 indirim"
-  },
-  {
-    code: "yemek2",
-    title: "Yemek 300/180",
-    price: "25₺",
-    discount: "300/180 indirim"
-  },
-  {
-    code: "market",
-    title: "Market 300/200",
-    price: "17₺",
-    discount: "300/200 indirim"
-  }
+  { code: "yemek", title: "Paket 1", price: "30₺", desc: "Açıklama" },
+  { code: "yemek2", title: "Paket 2", price: "25₺", desc: "Açıklama" },
+  { code: "market", title: "Paket 3", price: "17₺", desc: "Açıklama" }
 ];
 
-function loadProducts() {
-
+function renderProducts() {
   productsBox.innerHTML = "";
 
-  products.forEach(product => {
-
+  products.forEach((product) => {
     const card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
       <div class="card-title">${product.title}</div>
-      <div class="card-desc">${product.discount}</div>
+      <div class="card-desc">${product.desc}</div>
       <div class="card-price">${product.price}</div>
-      <button class="buy-btn">Satın Al</button>
+      <button class="buy-btn">Detay</button>
     `;
 
     const btn = card.querySelector(".buy-btn");
-
     btn.addEventListener("click", () => {
-
-      const commandMap = {
-        "yemek": "/yemek",
-        "yemek2": "/yemek2",
-        "market": "/market"
-      };
-
-      const cmd = commandMap[product.code];
-
-      if (cmd) {
-
-        tg.sendData(cmd);
-
-        tg.showAlert(product.title + " işlemi başlatıldı.\nBot mesajlarını kontrol et.");
-
-      }
-
+      tg.showAlert(`${product.title}\n${product.desc}\nFiyat: ${product.price}`);
     });
 
     productsBox.appendChild(card);
-
   });
-
 }
 
-loadProducts();
+renderProducts();
