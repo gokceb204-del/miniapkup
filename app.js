@@ -20,12 +20,17 @@ function renderProducts() {
       <div class="card-title">${product.title}</div>
       <div class="card-desc">${product.desc}</div>
       <div class="card-price">${product.price}</div>
-      <button class="buy-btn">Detay</button>
+      <button class="buy-btn">Satın Al</button>
     `;
 
     const btn = card.querySelector(".buy-btn");
+
     btn.addEventListener("click", () => {
-      tg.showAlert(`${product.title}\n${product.desc}\nFiyat: ${product.price}`);
+
+      // BOT'A KOMUT GÖNDER
+      tg.sendData(`/${product.code}`);
+
+      tg.close();
     });
 
     productsBox.appendChild(card);
