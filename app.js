@@ -1,4 +1,5 @@
 const tg = window.Telegram.WebApp;
+tg.ready();
 tg.expand();
 
 const productsBox = document.getElementById("products");
@@ -26,11 +27,13 @@ function renderProducts() {
     const btn = card.querySelector(".buy-btn");
 
     btn.addEventListener("click", () => {
-
-      // BOT'A KOMUT GÖNDER
-      tg.sendData(`/${product.code}`);
-
-      tg.close();
+      try {
+        tg.sendData(`/${product.code}`);
+        tg.showAlert(`${product.title} gönderildi`);
+      } catch (e) {
+        console.error("sendData hatası:", e);
+        tg.showAlert("Veri gönderilemedi");
+      }
     });
 
     productsBox.appendChild(card);
