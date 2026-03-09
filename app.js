@@ -1,4 +1,5 @@
 const tg = window.Telegram.WebApp;
+
 tg.ready();
 tg.expand();
 
@@ -10,7 +11,35 @@ const products = [
   { code: "market", title: "Paket 3", price: "17₺", desc: "Açıklama" }
 ];
 
+function sendProductCommand(product) {
+  try {
+    const payload = `/${product.code}`;
+    console.log("Gönderilen payload:", payload);
+
+    tg.sendData(payload);
+
+    tg.showPopup({
+      title: "İşlem başlatıldı",
+      message: `${product.title} için istek bota gönderildi.`,
+      buttons: [{ type: "ok" }]
+    });
+  } catch (err) {
+    console.error("Mini App veri gönderme hatası:", err);
+
+    tg.showPopup({
+      title: "Hata",
+      message: "İstek gönderilemedi.",
+      buttons: [{ type: "ok" }]
+    });
+  }
+}
+
 function renderProducts() {
+  if (!productsBox) {
+    console.error("products elementi bulunamadı");
+    return;
+  }
+
   productsBox.innerHTML = "";
 
   products.forEach((product) => {
@@ -25,16 +54,7 @@ function renderProducts() {
     `;
 
     const btn = card.querySelector(".buy-btn");
-
-    btn.addEventListener("click", () => {
-      try {
-        tg.sendData(`/${product.code}`);
-        tg.showAlert(`${product.title} gönderildi`);
-      } catch (e) {
-        console.error("sendData hatası:", e);
-        tg.showAlert("Veri gönderilemedi");
-      }
-    });
+    btn.addEventListener("click", () => sendProductCommand(product));
 
     productsBox.appendChild(card);
   });
